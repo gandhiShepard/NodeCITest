@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - "8"
+
+dist: trusty
+services:
+  - mongodb
+  - redis-server
+
+env: 
+  - NODE_ENV=ci PORT=3000
+
+cache:
+  directories:
+    - node_modules
+    - client/node_modules
+
+install:
+  - npm install
+  - npm run build
+
+script:
+# no hangup, run start in a sub shell, a background shell that is
+  - nohup npm run start &
+# wait for 3 seconds. we do this to insure that all is up before tests run
+  - sleep 3
+  - npm run test
